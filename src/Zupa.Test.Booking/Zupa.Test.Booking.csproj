@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <Version>0.0.1</Version>
+    <PackageId>Zupa.Test.Booking</PackageId>
+    <Product>Zupa Developer Test</Product>
+    <Description>Project used during the interview process by prospective developers looking to join Zupa.</Description>
+    <Company>Zupa</Company>
+    <Authors>Zupa Development Team</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
