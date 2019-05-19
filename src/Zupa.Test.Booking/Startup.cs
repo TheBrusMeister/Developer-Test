@@ -10,6 +10,8 @@ namespace Zupa.Test.Booking
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IProductsRepository, InMemoryProductsRepository>();
+            services.AddSingleton<IBasketsRepository, InMemoryBasketsRepository>();
             services.AddSingleton<IOrdersRepository, InMemoryOrdersRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(swagger =>

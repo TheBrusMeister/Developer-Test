@@ -11,10 +11,12 @@ namespace Zupa.Test.Booking.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
+        private readonly IBasketsRepository _basketsRepository;
         private readonly IOrdersRepository _ordersRepository;
 
-        public OrdersController(IOrdersRepository ordersRepository)
+        public OrdersController(IBasketsRepository basketsRepository, IOrdersRepository ordersRepository)
         {
+            _basketsRepository = basketsRepository;
             _ordersRepository = ordersRepository;
         }
 
@@ -25,6 +27,7 @@ namespace Zupa.Test.Booking.Controllers
         {
             var orderModel = basket.ToOrderModel();
             await _ordersRepository.SaveAsync(orderModel);
+            await _basketsRepository.ResetBasketAsync();
 
             return CreatedAtAction(
                 nameof(GetOrder),
