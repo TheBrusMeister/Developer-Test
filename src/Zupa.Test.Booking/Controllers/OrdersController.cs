@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Zupa.Test.Booking.Data;
 using Zupa.Test.Booking.ViewModels;
 
 namespace Zupa.Test.Booking.Controllers
@@ -11,16 +11,25 @@ namespace Zupa.Test.Booking.Controllers
     [ApiController]
     public class OrdersController : ControllerBase
     {
+        private readonly IOrdersRepository _ordersRepository;
+
+        public OrdersController(IOrdersRepository ordersRepository)
+        {
+            _ordersRepository = ordersRepository;
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Order>> PlaceOrder([FromBody]Basket basket)
         {
-            var id = Guid.NewGuid();
+            var orderModel = basket.ToOrderModel();
+            await _ordersRepository.SaveAsync(orderModel);
+
             return CreatedAtAction(
                 nameof(GetOrder),
-                new { id },
-                new Order { ID = id, GrossTotal = basket.Items.Sum(item => item.GrossPrice * item.Quantity) });
+                new { orderModel.ID },
+                orderModel.ToOrderViewModel());
         }
 
         [HttpGet("{id}")]
@@ -28,7 +37,8 @@ namespace Zupa.Test.Booking.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
-            return new Order { ID = id };
+            var order = await _ordersRepository.ReadAsync(id);
+            return order.ToOrderViewModel();
         }
     }
 }

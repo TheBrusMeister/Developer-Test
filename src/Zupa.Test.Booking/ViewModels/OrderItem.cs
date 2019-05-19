@@ -1,6 +1,6 @@
 ﻿namespace Zupa.Test.Booking.ViewModels
 {
-    public class OrderItem
+    public class OrderItem : Item
     {
         public int Quantity { get; set; }
     }

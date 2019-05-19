@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Zupa.Test.Booking.Data;
 
 namespace Zupa.Test.Booking
 {
@@ -9,6 +10,7 @@ namespace Zupa.Test.Booking
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IOrdersRepository, InMemoryOrdersRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(swagger =>
             {
