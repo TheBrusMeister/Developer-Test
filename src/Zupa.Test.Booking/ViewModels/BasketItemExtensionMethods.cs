@@ -19,6 +19,19 @@ namespace Zupa.Test.Booking.ViewModels
                 });
         }
 
+        public static Models.BasketItem ToBasketItemModel(this BasketItem basketItem)
+        {
+            return new Models.BasketItem
+            {
+                Id = basketItem.Id,
+                Name = basketItem.Name,
+                GrossPrice = basketItem.GrossPrice,
+                NetPrice = basketItem.NetPrice,
+                TaxRate = basketItem.TaxRate,
+                Quantity = basketItem.Quantity
+            };
+        }
+
         public static IEnumerable<Models.BasketItem> ToBasketItemModels(this IEnumerable<BasketItem> basketItems)
         {
             return basketItems.Select(

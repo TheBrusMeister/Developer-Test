@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Zupa.Test.Booking.Models;
 
 namespace Zupa.Test.Booking.Data
@@ -22,9 +23,13 @@ namespace Zupa.Test.Booking.Data
             return Task.FromResult(_basket = new Basket());
         }
 
-        public Task UpdateBasketAsync(Basket basket)
+        public Task<Basket> AddToBasketAsync(BasketItem item)
         {
-            return Task.FromResult(_basket = basket);
+            var items = _basket.Items.ToList();
+            items.Add(item);
+            _basket.Items = items;
+
+            return Task.FromResult(_basket);
         }
     }
 }

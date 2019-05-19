@@ -6,7 +6,7 @@ namespace Zupa.Test.Booking.Data
     public interface IBasketsRepository
     {
         Task ResetBasketAsync();
-        Task UpdateBasketAsync(Basket basket);
         Task<Basket> ReadAsync();
+        Task<Basket> AddToBasketAsync(BasketItem item);
     }
 }

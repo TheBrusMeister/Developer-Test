@@ -17,14 +17,6 @@ namespace Zupa.Test.Booking.ViewModels
             };
         }
 
-        public static Models.Basket ToBasketModel(this Basket basket)
-        {
-            return new Models.Basket
-            {
-                Items = basket.Items.ToBasketItemModels()
-            };
-        }
-
         public static Basket ToBasketViewModel(this Models.Basket basket)
         {
             return new Basket

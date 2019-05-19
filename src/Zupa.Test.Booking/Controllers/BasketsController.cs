@@ -20,12 +20,12 @@ namespace Zupa.Test.Booking.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Basket>> UpdateBasket([FromBody]Basket basket)
+        public async Task<ActionResult<Basket>> AddToBasket([FromBody]BasketItem basketItem)
         {
-            var basketModel = basket.ToBasketModel();
-            await _basketsRepository.UpdateBasketAsync(basketModel);
+            var item = basketItem.ToBasketItemModel();
+            var basket = await _basketsRepository.AddToBasketAsync(item);
 
-            return basket;
+            return basket.ToBasketViewModel();
         }
 
         [HttpGet]
