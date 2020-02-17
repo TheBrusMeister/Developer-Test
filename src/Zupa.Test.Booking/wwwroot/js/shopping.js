@@ -73,7 +73,6 @@ function applyDiscount() {
     }).then(function (response) {
         return response.data();
     });
-    }
 }
 
 function updateBasketView(basket)
