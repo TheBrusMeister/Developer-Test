@@ -65,7 +65,7 @@ function updateBasketView(basket)
     totalSpan.innerText = "Total (GBP)";
     totalLi.appendChild(totalSpan);
     let totalStrong = document.createElement('strong');
-    totalStrong.innerText = "£0.00";    
+    totalStrong.innerText = "£" + basket.total;    
     totalLi.appendChild(totalStrong);
     basketList.appendChild(totalLi);
 

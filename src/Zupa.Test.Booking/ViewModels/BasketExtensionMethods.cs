@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Zupa.Test.Booking.ViewModels
@@ -21,8 +22,30 @@ namespace Zupa.Test.Booking.ViewModels
         {
             return new Basket
             {
-                Items = basket.Items.ToBasketItemViewModels()
+                Items = basket.Items.ToBasketItemViewModels(),
+                Total = GetTotal(basket.Items.ToBasketItemViewModels().ToList())
             };
+        }
+
+        private static double GetTotal(List<BasketItem> items)
+        {
+            if (items is null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+            var total = 0.00;
+
+            items.ForEach(x =>
+            {
+                if (x.Quantity > 1)
+                {
+                    total += x.GrossPrice * x.Quantity;
+                }
+
+                total += x.GrossPrice;
+            });
+
+            return total;
         }
     }
 }
