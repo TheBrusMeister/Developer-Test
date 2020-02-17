@@ -7,5 +7,13 @@ namespace Zupa.Test.Booking.ViewModels
         public IEnumerable<BasketItem> Items { get; set; }
 
         public double Total { get; set; }
+
+        public void ApplyDiscount(double amount)
+        {
+            var subtractionMultiplier = amount / 100;
+            var subtractionAmount = Total * subtractionMultiplier;
+
+            Total -= subtractionAmount;
+        }
     }
 }

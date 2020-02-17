@@ -26,6 +26,13 @@ namespace Zupa.Test.Booking.ViewModels
                 Total = GetTotal(basket.Items.ToBasketItemViewModels().ToList())
             };
         }
+        public static Discounts ToDiscountModel(this Models.Discounts discounts)
+        {
+            return new Discounts
+            {
+                DiscountList = discounts.DiscountList
+            };
+        }
 
         private static double GetTotal(List<BasketItem> items)
         {

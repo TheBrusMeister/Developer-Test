@@ -13,6 +13,7 @@ namespace Zupa.Test.Booking
             services.AddSingleton<IProductsRepository, InMemoryProductsRepository>();
             services.AddSingleton<IBasketsRepository, InMemoryBasketsRepository>();
             services.AddSingleton<IOrdersRepository, InMemoryOrdersRepository>();
+            services.AddSingleton<IDiscountsRepository, InMemoryDiscountsRepository>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSwaggerGen(swagger =>
             {

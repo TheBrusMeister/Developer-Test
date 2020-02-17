@@ -55,6 +55,27 @@ function resetBasketCount(basketSize) {
     basketCount.innerText = basketSize;
 }
 
+function applyDiscount() {
+    var promoInput = document.querySelector("input[name='promo_code']");
+
+    var discount = {
+        "code": promoInput.value,
+        "amount": parseInt(promoInput.value.slice(-2))
+    };
+
+    fetch("api/baskets/apply/discount", {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: discount
+    }).then(function (response) {
+        return response.data();
+    });
+    }
+}
+
 function updateBasketView(basket)
 {
     let basketList = document.getElementById('currentBasket');
