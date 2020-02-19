@@ -88,9 +88,22 @@ function applyDiscount() {
             return response.json()
         })
         .then(discountList => {
-            updateBasketAfterDiscount(discountList.discountTotal)
+            updateBasketAfterDiscount(discountList.discountTotal);
+            showSuccess(discount.amount, discountList.discountTotal)
         })
         .catch(error => console.log(error));
+}
+
+function showSuccess(discount, discountTotal) {
+    var container = document.querySelector(".alert-placeholder");
+
+    var successContainer = document.createElement("DIV");
+    successContainer.classList.add("alert", "alert-success");
+    var successText = document.createElement('span');
+    successText.textContent = "Your %" + discount + " discount has been applied, your total is now" + " £" + discountTotal.toFixed(2);
+    successContainer.append(successText);
+
+    container.append(successContainer);
 }
 
 function updateBasketAfterDiscount(total) {
