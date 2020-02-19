@@ -109,10 +109,10 @@ function updateBasketView(basket)
     totalLi.appendChild(totalSpan);
     let totalStrong = document.createElement('strong');
     totalStrong.classList.add("total")
-    if (basket.discountedTotal < basket.total) {
+    if (basket.discountedTotal > basket.total) {
         totalStrong.innerText = "£" + basket.discountedTotal.toFixed(2);
     } else {
-        totalStrong.innerText = "£" + basket.totalbasket.discountedTotal.toFixed(2);;
+        totalStrong.innerText = "£" + basket.total.toFixed(2);;
     }
     totalLi.appendChild(totalStrong);
     basketList.appendChild(totalLi);

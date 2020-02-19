@@ -27,6 +27,7 @@ namespace Zupa.Test.Booking.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Discounts>> ApplyDiscount([FromBody]Discount discountItem)
         {
+            //TODO: move this logic out of the controller into a service.
             var item = discountItem.ToDiscountItem();
 
             string[] acceptableCodeNames = { "discount10", "discount50" };

@@ -14,7 +14,8 @@ namespace Zupa.Test.Booking.ViewModels
                 GrossTotal = basket.Items.Sum(item => item.GrossPrice),
                 NetTotal = basket.Items.Sum(item => item.NetPrice),
                 TaxTotal = basket.Items.Sum(item => item.NetPrice * item.TaxRate),
-                Items = basket.Items.ToOrderItemModels()
+                Items = basket.Items.ToOrderItemModels(),
+                DiscountedTotal = basket.DiscountedTotal
             };
         }
 
