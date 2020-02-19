@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zupa.Test.Booking.Data;
@@ -37,6 +36,5 @@ namespace Zupa.Test.Booking.Controllers
             var basket = await _basketsRepository.ReadAsync();
             return basket.ToBasketViewModel();
         }
-
     }
 }
