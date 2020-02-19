@@ -40,8 +40,7 @@ namespace Zupa.Test.Booking.Controllers
             return basket.ToBasketViewModel();
         }
 
-        [Route("/apply/discount")]
-        [HttpPut]
+        [HttpPut("/discount")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Discounts>> ApplyDiscountToBasket([FromBody]Discount discountItem)

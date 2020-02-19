@@ -63,7 +63,7 @@ function applyDiscount() {
         "amount": parseInt(promoInput.value.slice(-2))
     };
 
-    fetch("api/baskets/apply/discount", {
+    fetch("api/baskets/discount", {
         method: 'PUT',
         mode: 'cors',
         headers: {
