@@ -59,13 +59,6 @@ function resetBasketCount(basketSize) {
     basketCount.innerText = basketSize;
 }
 
-function handleErrors(response) {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-    return response;
-}
-
 function applyDiscount() {
     event.preventDefault();
     var promoInput = document.querySelector("input[name='promo_code']");
@@ -83,15 +76,32 @@ function applyDiscount() {
         },
         body: JSON.stringify(discount)
     })
-        .then(handleErrors)
         .then(response => {
             return response.json()
         })
         .then(discountList => {
+            if (discountList.discountTotal == null) {
+                if (discountList.message !== null && typeof (discountList.message) != "undefined") {
+                    showError(discountList.message);
+                    return;
+                }
+            }
             updateBasketAfterDiscount(discountList.discountTotal);
             showSuccess(discount.amount, discountList.discountTotal)
         })
         .catch(error => console.log(error));
+}
+
+function showError(message) {
+    var container = document.querySelector(".alert-placeholder");
+
+    var successContainer = document.createElement("DIV");
+    successContainer.classList.add("alert", "alert-danger");
+    var successText = document.createElement('span');
+    successText.textContent = message;
+    successContainer.append(successText);
+
+    container.append(successContainer);
 }
 
 function showSuccess(discount, discountTotal) {
@@ -100,7 +110,7 @@ function showSuccess(discount, discountTotal) {
     var successContainer = document.createElement("DIV");
     successContainer.classList.add("alert", "alert-success");
     var successText = document.createElement('span');
-    successText.textContent = "Your %" + discount + " discount has been applied, your total is now" + " £" + discountTotal.toFixed(2);
+    successText.textContent = "Your " + discount + "% discount has been applied, your total is now" + " £" + discountTotal.toFixed(2);
     successContainer.append(successText);
 
     container.append(successContainer);
