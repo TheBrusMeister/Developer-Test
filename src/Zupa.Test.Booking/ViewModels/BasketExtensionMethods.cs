@@ -23,14 +23,17 @@ namespace Zupa.Test.Booking.ViewModels
             return new Basket
             {
                 Items = basket.Items.ToBasketItemViewModels(),
-                Total = GetTotal(basket.Items.ToBasketItemViewModels().ToList())
+                Total = GetTotal(basket.Items.ToBasketItemViewModels().ToList()),
+                DiscountedTotal = basket.DiscountedTotal
+
             };
         }
-        public static Discounts ToDiscountModel(this Models.Discounts discounts)
+        public static Discounts ToDiscountModel(this Models.Discounts discounts, Basket basket)
         {
             return new Discounts
             {
-                DiscountList = discounts.DiscountList
+                DiscountList = discounts.DiscountList,
+                DiscountTotal = basket.DiscountedTotal
             };
         }
 

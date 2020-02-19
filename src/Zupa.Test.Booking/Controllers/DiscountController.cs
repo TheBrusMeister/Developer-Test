@@ -35,8 +35,7 @@ namespace Zupa.Test.Booking.Controllers
 
             if (!correctCode)
             {
-                Response.StatusCode = 400;
-                return Content("the code can either be " + acceptableCodeNames[0] + " or " + acceptableCodeNames[1]);
+                return BadRequest(new { message = "the code can either be " + acceptableCodeNames[0] + " or " + acceptableCodeNames[1] });
             }
 
             if (correctCode)
@@ -45,8 +44,7 @@ namespace Zupa.Test.Booking.Controllers
 
                 if (discountExists)
                 {
-                    Response.StatusCode = 400;
-                    return Content("A discount with the name " + item.Code + "  already exists");
+                    return BadRequest(new { message = "A discount with the name " + item.Code + "  already exists" });
                 }
 
                 if (!discountExists)
@@ -56,13 +54,15 @@ namespace Zupa.Test.Booking.Controllers
 
                     basketModel.ApplyDiscount(discountItem.Amount);
                     var discounts = await _discountRepository.AddToDiscountRepositoryAsync(discountItem);
+                    basket.DiscountedTotal = basketModel.DiscountedTotal;
+                    await _basketsRepository.UpdateBasket(basket);
+
                     Response.StatusCode = 201;
-                    return discounts.ToDiscountModel();
+                    return discounts.ToDiscountModel(basketModel);
                 }
             }
 
-            Response.StatusCode = 400;
-            return Content("something went wrong");
+            return BadRequest(new { message = "A discount with the name " + item.Code + "  already exists" });
         }
     }
 }

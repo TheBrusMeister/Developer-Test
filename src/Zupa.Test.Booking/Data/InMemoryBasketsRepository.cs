@@ -31,5 +31,10 @@ namespace Zupa.Test.Booking.Data
 
             return Task.FromResult(_basket);
         }
+
+        public Task<Basket> UpdateBasket(Basket basket)
+        {
+            return Task.FromResult(_basket = basket);
+        }
     }
 }

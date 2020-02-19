@@ -8,12 +8,14 @@ namespace Zupa.Test.Booking.ViewModels
 
         public double Total { get; set; }
 
+        public double DiscountedTotal { get; set; }
+
         public void ApplyDiscount(double amount)
         {
             var subtractionMultiplier = amount / 100;
             var subtractionAmount = Total * subtractionMultiplier;
 
-            Total -= subtractionAmount;
+            DiscountedTotal = Total -= subtractionAmount;
         }
     }
 }

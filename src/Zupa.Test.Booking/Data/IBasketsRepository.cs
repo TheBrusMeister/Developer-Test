@@ -8,5 +8,7 @@ namespace Zupa.Test.Booking.Data
         Task ResetBasketAsync();
         Task<Basket> ReadAsync();
         Task<Basket> AddToBasketAsync(BasketItem item);
+
+        Task<Basket> UpdateBasket(Basket basket);
     }
 }

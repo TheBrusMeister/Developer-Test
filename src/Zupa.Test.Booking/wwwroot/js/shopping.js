@@ -32,6 +32,10 @@
                 productsList.appendChild(li);
             });
         });
+    var discountForm = document.querySelector("form.card.p-2");
+    discountForm.addEventListener("submit", event => {
+        event.preventDefault();
+    });
 
     fetch('/api/baskets')
         .then(function (response) {
@@ -55,7 +59,14 @@ function resetBasketCount(basketSize) {
     basketCount.innerText = basketSize;
 }
 
-function applyDiscount(event) {
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
+
+function applyDiscount() {
     event.preventDefault();
     var promoInput = document.querySelector("input[name='promo_code']");
 
@@ -71,9 +82,20 @@ function applyDiscount(event) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(discount)
-    }).then(function (response) {
-        return response.data();
-    });
+    })
+        .then(handleErrors)
+        .then(response => {
+            return response.json()
+        })
+        .then(discountList => {
+            updateBasketAfterDiscount(discountList.discountTotal)
+        })
+        .catch(error => console.log(error));
+}
+
+function updateBasketAfterDiscount(total) {
+    var totalElement = document.querySelector(".total");
+    totalElement.innerText = "£" + total.toFixed(2);
 }
 
 function updateBasketView(basket)
@@ -86,7 +108,12 @@ function updateBasketView(basket)
     totalSpan.innerText = "Total (GBP)";
     totalLi.appendChild(totalSpan);
     let totalStrong = document.createElement('strong');
-    totalStrong.innerText = "£" + basket.total;    
+    totalStrong.classList.add("total")
+    if (basket.discountedTotal < basket.total) {
+        totalStrong.innerText = "£" + basket.discountedTotal.toFixed(2);
+    } else {
+        totalStrong.innerText = "£" + basket.totalbasket.discountedTotal.toFixed(2);;
+    }
     totalLi.appendChild(totalStrong);
     basketList.appendChild(totalLi);
 
