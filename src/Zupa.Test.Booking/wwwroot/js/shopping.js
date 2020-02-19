@@ -55,7 +55,8 @@ function resetBasketCount(basketSize) {
     basketCount.innerText = basketSize;
 }
 
-function applyDiscount() {
+function applyDiscount(event) {
+    event.preventDefault();
     var promoInput = document.querySelector("input[name='promo_code']");
 
     var discount = {
