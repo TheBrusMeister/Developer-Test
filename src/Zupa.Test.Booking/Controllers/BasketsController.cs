@@ -12,12 +12,10 @@ namespace Zupa.Test.Booking.Controllers
     public class BasketsController : ControllerBase
     {
         private readonly IBasketsRepository _basketsRepository;
-        private readonly IDiscountsRepository _discountRepository;
 
-        public BasketsController(IBasketsRepository basketsRepository, IDiscountsRepository discountsRepository)
+        public BasketsController(IBasketsRepository basketsRepository)
         {
             _basketsRepository = basketsRepository;
-            _discountRepository = discountsRepository;
         }
 
         [HttpPut]
@@ -40,46 +38,5 @@ namespace Zupa.Test.Booking.Controllers
             return basket.ToBasketViewModel();
         }
 
-        [HttpPut("/discount")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Discounts>> ApplyDiscountToBasket([FromBody]Discount discountItem)
-        {
-            var item = discountItem.ToDiscountItem();
-
-            string[] acceptableCodeNames = {"discount10", "discount50"};
-
-            bool correctCode = discountItem.Code.Equals(acceptableCodeNames[0]) || discountItem.Code.Equals(acceptableCodeNames[1]);
-
-            if (!correctCode)
-            {
-                Response.StatusCode = 400;
-                return Content("the code can either be " + acceptableCodeNames[0] + " or " + acceptableCodeNames[1]);
-            }
-
-            if (correctCode)
-            {
-                var discountExists = await _discountRepository.IsDiscountInRepository(item.Code);
-
-                if (discountExists)
-                {
-                    Response.StatusCode = 400;
-                    return Content("A discount with the name " + item.Code + "  already exists");
-                }
-
-                if (!discountExists)
-                {
-                    var basket = await _basketsRepository.ReadAsync();
-                    var basketModel = basket.ToBasketViewModel();
-
-                    basketModel.ApplyDiscount(discountItem.Amount);
-                    var discounts = await _discountRepository.AddToDiscountRepositoryAsync(discountItem);
-                    return discounts.ToDiscountModel();
-                }
-            }
-
-            Response.StatusCode = 400;
-            return Content("something went wrong");
-        }
     }
 }

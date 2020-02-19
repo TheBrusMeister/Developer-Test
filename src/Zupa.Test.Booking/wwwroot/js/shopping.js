@@ -63,13 +63,13 @@ function applyDiscount() {
         "amount": parseInt(promoInput.value.slice(-2))
     };
 
-    fetch("api/baskets/discount", {
+    fetch("api/discount", {
         method: 'PUT',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: discount
+        body: JSON.stringify(discount)
     }).then(function (response) {
         return response.data();
     });
