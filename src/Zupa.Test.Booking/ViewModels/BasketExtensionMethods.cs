@@ -24,9 +24,8 @@ namespace Zupa.Test.Booking.ViewModels
             return new Basket
             {
                 Items = basket.Items.ToBasketItemViewModels(),
-                Total = GetTotal(basket.Items.ToBasketItemViewModels().ToList()),
+                Total = basket.GetTotal(basket.Items.ToList()),
                 DiscountedTotal = basket.DiscountedTotal
-
             };
         }
         public static Discounts ToDiscountModel(this Models.Discounts discounts, Basket basket)
@@ -36,27 +35,6 @@ namespace Zupa.Test.Booking.ViewModels
                 DiscountList = discounts.DiscountList,
                 DiscountTotal = basket.DiscountedTotal
             };
-        }
-
-        private static double GetTotal(List<BasketItem> items)
-        {
-            if (items is null)
-            {
-                throw new ArgumentNullException(nameof(items));
-            }
-            var total = 0.00;
-
-            items.ForEach(x =>
-            {
-                if (x.Quantity > 1)
-                {
-                    total += x.GrossPrice * x.Quantity;
-                }
-
-                total += x.GrossPrice;
-            });
-
-            return total;
         }
     }
 }

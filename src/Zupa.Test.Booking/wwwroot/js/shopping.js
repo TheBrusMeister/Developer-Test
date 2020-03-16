@@ -76,20 +76,24 @@ function applyDiscount() {
         },
         body: JSON.stringify(discount)
     })
-        .then(response => {
-            return response.json()
+        .then(function (response) {
+            return response.json();
         })
-        .then(discountList => {
-            if (discountList.discountTotal == null) {
-                if (discountList.message !== null && typeof (discountList.message) != "undefined") {
-                    showError(discountList.message);
-                    return;
-                }
+        .then(function (basket) {
+            if (basket.message) {
+                showError(basket.message);
+                return;
             }
-            updateBasketAfterDiscount(discountList.discountTotal);
-            showSuccess(discount.amount, discountList.discountTotal)
+            if (basket.successMessage) {
+                updateBasketAfterDiscount(basket.discountedTotal);
+                showSuccess(basket.successMessage);
+            } else {
+                showError(basket.failureMessage)
+            }
         })
-        .catch(error => console.log(error));
+        .catch(function (error) {
+            console.log(error)
+        });
 }
 
 function showError(message) {
@@ -104,13 +108,13 @@ function showError(message) {
     container.append(successContainer);
 }
 
-function showSuccess(discount, discountTotal) {
+function showSuccess(message) {
     var container = document.querySelector(".alert-placeholder");
 
     var successContainer = document.createElement("DIV");
     successContainer.classList.add("alert", "alert-success");
     var successText = document.createElement('span');
-    successText.textContent = "Your " + discount + "% discount has been applied, your total is now" + " £" + discountTotal.toFixed(2);
+    successText.textContent = message;
     successContainer.append(successText);
 
     container.append(successContainer);
@@ -132,7 +136,7 @@ function updateBasketView(basket)
     totalLi.appendChild(totalSpan);
     let totalStrong = document.createElement('strong');
     totalStrong.classList.add("total")
-    if (basket.discountedTotal > basket.total) {
+    if (basket.discountedTotal !== 0) {
         totalStrong.innerText = "£" + basket.discountedTotal.toFixed(2);
     } else {
         totalStrong.innerText = "£" + basket.total.toFixed(2);;

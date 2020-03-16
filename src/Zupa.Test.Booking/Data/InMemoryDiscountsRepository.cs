@@ -36,15 +36,7 @@ namespace Zupa.Test.Booking.Data
         public Task<bool> IsDiscountInRepository(string code)
         {
             var items = _discounts.DiscountList.ToList();
-            var hasItem = false;
-
-            items.ForEach(item => 
-            {
-                if(item.Code.Equals(code))
-                {
-                    hasItem = true;
-                }
-            });
+            var hasItem = items.Any(x => x.Code.Equals(code));
 
             return Task.FromResult(hasItem);
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Zupa.Test.Booking.Data;
+using Zupa.Test.Booking.Services;
 using Zupa.Test.Booking.ViewModels;
 
 namespace Zupa.Test.Booking.Controllers
@@ -15,55 +16,31 @@ namespace Zupa.Test.Booking.Controllers
     {
         private readonly IDiscountsRepository _discountRepository;
         private readonly IBasketsRepository _basketsRepository;
+        private readonly IDiscountService _discountService;
 
-        public DiscountController(IDiscountsRepository discountsRepository, IBasketsRepository basketsRepository)
+        public DiscountController(IDiscountsRepository discountsRepository, IBasketsRepository basketsRepository, IDiscountService discountService)
         {
             _discountRepository = discountsRepository;
             _basketsRepository = basketsRepository;
+            _discountService = discountService;
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Discounts>> ApplyDiscount([FromBody]Discount discountItem)
+        public async Task<ActionResult<Basket>> ApplyDiscount([FromBody]Discount discountItem)
         {
-            //TODO: move this logic out of the controller into a service.
-            var item = discountItem.ToDiscountItem();
+            var basket = await _basketsRepository.ReadAsync();
+            var basketModel = basket.ToBasketViewModel();
+            _discountService.ApplyDiscount(basketModel, discountItem);
 
-            string[] acceptableCodeNames = { "discount10", "discount50" };
-
-            bool correctCode = discountItem.Code.Equals(acceptableCodeNames[0]) || discountItem.Code.Equals(acceptableCodeNames[1]);
-
-            if (!correctCode)
+            if (basketModel.FailureMessage != null)
             {
-                return BadRequest(new { message = "the code can either be " + acceptableCodeNames[0] + " or " + acceptableCodeNames[1] });
+                return BadRequest(new { message = basketModel.FailureMessage });
             }
 
-            if (correctCode)
-            {
-                var discountExists = await _discountRepository.IsDiscountInRepository(item.Code);
-
-                if (discountExists)
-                {
-                    return BadRequest(new { message = "A discount with the name " + item.Code + "  already exists" });
-                }
-
-                if (!discountExists)
-                {
-                    var basket = await _basketsRepository.ReadAsync();
-                    var basketModel = basket.ToBasketViewModel();
-
-                    basketModel.ApplyDiscount(discountItem.Amount);
-                    var discounts = await _discountRepository.AddToDiscountRepositoryAsync(discountItem);
-                    basket.DiscountedTotal = basketModel.DiscountedTotal;
-                    await _basketsRepository.UpdateBasket(basket);
-
-                    Response.StatusCode = 201;
-                    return discounts.ToDiscountModel(basketModel);
-                }
-            }
-
-            return BadRequest(new { message = "A discount with the name " + item.Code + "  already exists" });
+            Response.StatusCode = 201;
+            return basketModel;
         }
     }
 }
