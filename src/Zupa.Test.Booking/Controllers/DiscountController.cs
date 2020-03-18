@@ -14,13 +14,11 @@ namespace Zupa.Test.Booking.Controllers
     [ApiController]
     public class DiscountController : ControllerBase
     {
-        private readonly IDiscountsRepository _discountRepository;
         private readonly IBasketsRepository _basketsRepository;
         private readonly IDiscountService _discountService;
 
-        public DiscountController(IDiscountsRepository discountsRepository, IBasketsRepository basketsRepository, IDiscountService discountService)
+        public DiscountController(IBasketsRepository basketsRepository, IDiscountService discountService)
         {
-            _discountRepository = discountsRepository;
             _basketsRepository = basketsRepository;
             _discountService = discountService;
         }
