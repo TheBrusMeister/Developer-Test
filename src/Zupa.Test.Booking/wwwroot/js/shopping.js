@@ -32,6 +32,10 @@
                 productsList.appendChild(li);
             });
         });
+    var discountForm = document.querySelector("form.card.p-2");
+    discountForm.addEventListener("submit", event => {
+        event.preventDefault();
+    });
 
     fetch('/api/baskets')
         .then(function (response) {
@@ -55,6 +59,72 @@ function resetBasketCount(basketSize) {
     basketCount.innerText = basketSize;
 }
 
+function applyDiscount() {
+    event.preventDefault();
+    var promoInput = document.querySelector("input[name='promo_code']");
+
+    var discount = {
+        "code": promoInput.value,
+        "amount": parseInt(promoInput.value.slice(-2))
+    };
+
+    fetch("api/discount", {
+        method: 'PUT',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(discount)
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (basket) {
+            if (basket.message) {
+                showError(basket.message);
+                return;
+            }
+            if (basket.successMessage) {
+                updateBasketAfterDiscount(basket.discountedTotal);
+                showSuccess(basket.successMessage);
+            } else {
+                showError(basket.failureMessage)
+            }
+        })
+        .catch(function (error) {
+            console.log(error)
+        });
+}
+
+function showError(message) {
+    var container = document.querySelector(".alert-placeholder");
+
+    var successContainer = document.createElement("DIV");
+    successContainer.classList.add("alert", "alert-danger");
+    var successText = document.createElement('span');
+    successText.textContent = message;
+    successContainer.append(successText);
+
+    container.append(successContainer);
+}
+
+function showSuccess(message) {
+    var container = document.querySelector(".alert-placeholder");
+
+    var successContainer = document.createElement("DIV");
+    successContainer.classList.add("alert", "alert-success");
+    var successText = document.createElement('span');
+    successText.textContent = message;
+    successContainer.append(successText);
+
+    container.append(successContainer);
+}
+
+function updateBasketAfterDiscount(total) {
+    var totalElement = document.querySelector(".total");
+    totalElement.innerText = "£" + total.toFixed(2);
+}
+
 function updateBasketView(basket)
 {
     let basketList = document.getElementById('currentBasket');
@@ -65,7 +135,12 @@ function updateBasketView(basket)
     totalSpan.innerText = "Total (GBP)";
     totalLi.appendChild(totalSpan);
     let totalStrong = document.createElement('strong');
-    totalStrong.innerText = "£0.00";    
+    totalStrong.classList.add("total")
+    if (basket.discountedTotal !== 0) {
+        totalStrong.innerText = "£" + basket.discountedTotal.toFixed(2);
+    } else {
+        totalStrong.innerText = "£" + basket.total.toFixed(2);;
+    }
     totalLi.appendChild(totalStrong);
     basketList.appendChild(totalLi);
 

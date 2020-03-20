@@ -12,7 +12,8 @@ namespace Zupa.Test.Booking.ViewModels
                 GrossTotal = order.GrossTotal,
                 NetTotal = order.NetTotal,
                 TaxTotal = order.TaxTotal,
-                Items = order.Items.Select(item => item.ToOrderItemViewModel())
+                Items = order.Items.Select(item => item.ToOrderItemViewModel()),
+                DiscountedTotal = order.DiscountedTotal
             };
         }
     }

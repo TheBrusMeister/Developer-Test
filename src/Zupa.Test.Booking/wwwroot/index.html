@@ -21,14 +21,17 @@
                     
                 </ul>
 
-                <form class="card p-2">
+                <form class="card p-2" onsubmit="return applyDiscount()">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Promo code">
+                        <input type="text" class="form-control " name="promo_code" placeholder="Promo code">
                         <div class="input-group-append">
                             <button type="submit" class="btn btn-secondary">Redeem</button>
                         </div>
                     </div>
                 </form>
+                <div class="alert-placeholder" style="margin-top: 10px">
+
+                </div>
             </div>
 
             <div class="col-md-8 order-md-1">

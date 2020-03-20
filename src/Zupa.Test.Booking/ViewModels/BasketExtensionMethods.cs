@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Zupa.Test.Booking.ViewModels
@@ -13,7 +14,8 @@ namespace Zupa.Test.Booking.ViewModels
                 GrossTotal = basket.Items.Sum(item => item.GrossPrice),
                 NetTotal = basket.Items.Sum(item => item.NetPrice),
                 TaxTotal = basket.Items.Sum(item => item.NetPrice * item.TaxRate),
-                Items = basket.Items.ToOrderItemModels()
+                Items = basket.Items.ToOrderItemModels(),
+                DiscountedTotal = basket.DiscountedTotal
             };
         }
 
@@ -21,7 +23,17 @@ namespace Zupa.Test.Booking.ViewModels
         {
             return new Basket
             {
-                Items = basket.Items.ToBasketItemViewModels()
+                Items = basket.Items.ToBasketItemViewModels(),
+                Total = basket.GetTotal(basket.Items.ToList()),
+                DiscountedTotal = basket.DiscountedTotal
+            };
+        }
+        public static Discounts ToDiscountModel(this Models.Discounts discounts, Basket basket)
+        {
+            return new Discounts
+            {
+                DiscountList = discounts.DiscountList,
+                DiscountTotal = basket.DiscountedTotal
             };
         }
     }
